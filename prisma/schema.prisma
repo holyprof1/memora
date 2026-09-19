@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Shirt {
+  id          Int       @id @default(autoincrement())
+  shirtId     String    @unique
+  displayName String?
+  department  String?
+  pageUrl     String
+  qrCodeSvg   String
+  createdAt   DateTime  @default(now())
+  memories    Memory[]
+
+  @@index([createdAt])
+  @@index([displayName])
+  @@index([department])
+}
+
+model Memory {
+  id                 Int      @id @default(autoincrement())
+  shirtId            String
+  visitorName        String
+  visitorDepartment  String?
+  memory             String
+  createdAt          DateTime @default(now())
+  shirt              Shirt    @relation(fields: [shirtId], references: [shirtId], onDelete: Cascade)
+
+  @@index([shirtId, createdAt])
+  @@index([createdAt])
+}
+
+model Counter {
+  key   String @id
+  value Int    @default(0)
+}

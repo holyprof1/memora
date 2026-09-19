@@ -1,0 +1,47 @@
+{
+  "name": "memora",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "admin:hash": "tsx scripts/hash-password.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "better-sqlite3": "13.0.3",
+    "next": "16.3.5",
+    "qrcode": "1.5.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "24.5.2",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "prisma": "7.10.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "better-sqlite3@13.0.3": true,
+    "@prisma/engines@7.10.0": true,
+    "esbuild@0.28.2": true,
+    "prisma@7.10.0": true,
+    "fsevents@2.3.3": true
+  }
+}

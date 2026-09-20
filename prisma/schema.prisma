@@ -15,11 +15,24 @@ model Shirt {
   pageUrl     String
   qrCodeSvg   String
   createdAt   DateTime  @default(now())
+  ownerId     Int?      @unique
+  owner       Owner?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   memories    Memory[]
 
   @@index([createdAt])
   @@index([displayName])
   @@index([department])
+}
+
+model Owner {
+  id           Int      @id @default(autoincrement())
+  displayName  String
+  department   String?
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  shirts       Shirt[]
 }
 
 model Memory {

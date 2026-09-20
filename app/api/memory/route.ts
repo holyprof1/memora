@@ -12,8 +12,9 @@ export async function POST(request: Request) {
 
     if (parsed.data.website) return NextResponse.json({ ok: true }, { status: 201 });
 
-    const shirt = await prisma.shirt.findUnique({ where: { shirtId: parsed.data.shirtId }, select: { shirtId: true } });
+    const shirt = await prisma.shirt.findUnique({ where: { shirtId: parsed.data.shirtId }, select: { shirtId: true, ownerId: true } });
     if (!shirt) return NextResponse.json({ error: "This MEMORA page does not exist" }, { status: 404 });
+    if (!shirt.ownerId) return NextResponse.json({ error: "This shirt must be claimed before memories can be added" }, { status: 409 });
 
     await prisma.memory.create({
       data: {

@@ -208,6 +208,8 @@ a { color: inherit; }
 .memory-meta { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
 .memory-author { font-weight: 700; color: var(--ink); }
 .memory-text { margin: 7px 0 0; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
+.owner-shirt { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.owner-shirt h2 { margin: 8px 0 14px; font: 600 28px "Fraunces", Georgia, serif; }
 .edit-form { display: grid; gap: 8px; margin-top: 12px; }
 .edit-actions { display: flex; gap: 8px; }
 .pagination { display: flex; justify-content: center; align-items: center; gap: 12px; padding-top: 20px; }

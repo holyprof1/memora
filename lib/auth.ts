@@ -2,6 +2,7 @@ import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypt
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "memora_admin";
+const OWNER_COOKIE_NAME = "memora_owner";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
 type Session = { email: string; exp: number; nonce: string };
@@ -47,6 +48,15 @@ function verifyPassword(password: string, encoded: string) {
   return timingSafeEqual(derived, expected);
 }
 
+export function hashPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  return `scrypt:${salt}:${scryptSync(password, salt, 64).toString("hex")}`;
+}
+
+export function verifyStoredPassword(password: string, encoded: string) {
+  return verifyPassword(password, encoded);
+}
+
 export function isConfigured() {
   return Boolean(process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD_HASH && process.env.SESSION_SECRET);
 }
@@ -79,6 +89,25 @@ export async function getSession() {
   const jar = await cookies();
   const value = jar.get(COOKIE_NAME)?.value;
   return value ? decode(value) : null;
+}
+
+export async function createOwnerSession(ownerId: number) {
+  const jar = await cookies();
+  jar.set(OWNER_COOKIE_NAME, encode({ email: String(ownerId), exp: Math.floor(Date.now() / 1000) + MAX_AGE_SECONDS, nonce: randomBytes(12).toString("hex") }), {
+    httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", path: "/", maxAge: MAX_AGE_SECONDS,
+  });
+}
+
+export async function getOwnerId() {
+  const jar = await cookies();
+  const session = decode(jar.get(OWNER_COOKIE_NAME)?.value ?? "");
+  const ownerId = Number(session?.email);
+  return Number.isInteger(ownerId) && ownerId > 0 ? ownerId : null;
+}
+
+export async function clearOwnerSession() {
+  const jar = await cookies();
+  jar.delete(OWNER_COOKIE_NAME);
 }
 
 export async function requireAdmin() {

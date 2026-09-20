@@ -1,29 +1,37 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateTable
 CREATE TABLE "Shirt" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "shirtId" TEXT NOT NULL,
     "displayName" TEXT,
     "department" TEXT,
     "pageUrl" TEXT NOT NULL,
     "qrCodeSvg" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Shirt_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Memory" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "shirtId" TEXT NOT NULL,
     "visitorName" TEXT NOT NULL,
     "visitorDepartment" TEXT,
     "memory" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Memory_shirtId_fkey" FOREIGN KEY ("shirtId") REFERENCES "Shirt" ("shirtId") ON DELETE CASCADE ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Memory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Counter" (
-    "key" TEXT NOT NULL PRIMARY KEY,
-    "value" INTEGER NOT NULL DEFAULT 0
+    "key" TEXT NOT NULL,
+    "value" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "Counter_pkey" PRIMARY KEY ("key")
 );
 
 -- CreateIndex
@@ -43,3 +51,6 @@ CREATE INDEX "Memory_shirtId_createdAt_idx" ON "Memory"("shirtId", "createdAt");
 
 -- CreateIndex
 CREATE INDEX "Memory_createdAt_idx" ON "Memory"("createdAt");
+
+-- AddForeignKey
+ALTER TABLE "Memory" ADD CONSTRAINT "Memory_shirtId_fkey" FOREIGN KEY ("shirtId") REFERENCES "Shirt"("shirtId") ON DELETE CASCADE ON UPDATE CASCADE;
